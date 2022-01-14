@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "740961477831",
+    "project_id": "viridelivery",
+    "storage_bucket": "viridelivery.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:740961477831:android:7cfcbe79f1f395bf074ae2",
+        "android_client_info": {
+          "package_name": "com.login_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "740961477831-r83plcoo8mhd1ra3o1mp6b6tnjv12p1h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCghFErWai2HY_MvaFMuA0nXV5vfT5RK2c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "740961477831-r83plcoo8mhd1ra3o1mp6b6tnjv12p1h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

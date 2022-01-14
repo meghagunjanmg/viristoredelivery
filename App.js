@@ -26,7 +26,10 @@ import UploadSign from './UploadSign';
 import { ReduxNetworkProvider } from 'react-native-offline';
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 
-
+import PushNotificationIOS from "react-native-push-notification";
+import PushNotification from "react-native-push-notification";
+import Firebase from '@react-native-firebase/app'
+import messaging from '@react-native-firebase/messaging';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -81,7 +84,7 @@ const TabStack = () => {
         activeTintColor: '#FFFFFF',
         inactiveTintColor: '#000000',
         style: {
-          backgroundColor: '#f2a900',
+          backgroundColor: '#238A02',
         },
         labelStyle: {
           textAlign: 'center',
@@ -170,7 +173,7 @@ const HomeScreenStack = ({navigation}) => {
             />
           ),
           headerStyle: {
-            backgroundColor: '#f2a900', //Set Header color
+            backgroundColor: '#238A02', //Set Header color
           },
           headerTintColor: '#fff', //Set Header text color
           headerTitleStyle: {
@@ -242,7 +245,7 @@ const UploadSignStack = ({navigation}) => {
           <NavigationDrawerStructure navigationProps={navigation} />
         ),
         headerStyle: {
-          backgroundColor:'#f2a900', //Set Header color
+          backgroundColor:'#238A02', //Set Header color
         },
         headerTintColor: '#fff', //Set Header text color
         headerTitleStyle: {
@@ -269,7 +272,7 @@ const DeliverScreenStack = ({navigation}) => {
           <NavigationDrawerStructure navigationProps={navigation} />
         ),
         headerStyle: {
-          backgroundColor:'#f2a900', //Set Header color
+          backgroundColor:'#238A02', //Set Header color
         },
         headerTintColor: '#fff', //Set Header text color
         headerTitleStyle: {
@@ -296,7 +299,7 @@ const SplashScreenStack = ({navigation}) => {
           <NavigationDrawerStructure navigationProps={navigation} />
         ),
         headerStyle: {
-          backgroundColor:'#f2a900', //Set Header color
+          backgroundColor:'#238A02', //Set Header color
         },
         headerTintColor: '#fff', //Set Header text color
         headerTitleStyle: {
@@ -328,7 +331,7 @@ const LogoutStack = ({navigation}) => {
   style={{flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'#ffffff'}}>
   <Image
     source={require('./Drawble/app_icon_2.png')}
-    style={{height:100,width:70}}
+    style={{height:110,width:150}}
     />
 </View>
    );
@@ -339,7 +342,7 @@ function Draw(){
   return(
     <Drawer.Navigator
         drawerContentOptions={{
-          activeTintColor: '#f2a900',
+          activeTintColor: '#238A02',
           itemStyle: {marginVertical: 5},
         }}>
         <Drawer.Screen
@@ -376,6 +379,85 @@ function Draw(){
 
 const App = () => {
  
+  Firebase.initializeApp(this)
+
+  useEffect(() => {
+  
+    firebasenotification()
+
+  }, []);
+
+ // async function registerAppWithFCM() {  messaging().setAutoInitEnabled(true) }
+
+  const firebasenotification = async () => {
+    //registerAppWithFCM()
+    Firebase.initializeApp(this)
+
+// Must be outside of any component LifeCycle (such as `componentDidMount`).
+PushNotification.configure({
+  // (optional) Called when Token is generated (iOS and Android)
+  onRegister: function (token) {
+    console.log("TOKEN:", token);
+  },
+
+  // (required) Called when a remote is received or opened, or local notification is opened
+  onNotification: function (notification) {
+    console.log("NOTIFICATION:", notification);
+    this.setState({
+      pushNotification: notification,
+      visible: true
+    });
+    // process the notification
+
+    // (required) Called when a remote is received or opened, or local notification is opened
+    notification.finish(PushNotificationIOS.FetchResult.NoData);
+
+    if (notification.foreground) {
+      PushNotification.localNotification({
+          title:notification.title,
+          message:notification.message
+      });
+   } 
+  },
+
+  // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
+  onAction: function (notification) {
+    console.log("ACTION:", notification.action);
+    console.log("NOTIFICATION:", notification);
+
+    // process the action
+  },
+
+  // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
+  onRegistrationError: function(err) {
+    console.error(err.message, err);
+  },
+
+  // IOS ONLY (optional): default: all - Permissions to register.
+  permissions: {
+    alert: true,
+    badge: true,
+    sound: true,
+  },
+  
+  
+
+
+  // Should the initial notification be popped automatically
+  // default: true
+  popInitialNotification: true,
+
+  /**
+   * (optional) default: true
+   * - Specified if permissions (ios) and token (android and ios) will requested or not,
+   * - if not, you must call PushNotificationsHandler.requestPermissions() later
+   * - if you are not using remote notification or do not have Firebase installed, use this:
+   *     requestPermissions: Platform.OS === 'ios'
+   */
+  requestPermissions: true,
+});
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
